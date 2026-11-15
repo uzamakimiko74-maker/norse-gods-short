@@ -1,0 +1,13 @@
+Top 5 Strongest Hindu Gods — credits
+
+Narration: the user's own recording, made with ElevenLabs text-to-speech
+  (voice "Jarnathan - warm, confident, versatile", model eleven_v4). Used under the user's ElevenLabs terms.
+
+Fonts: IM Fell English and IM Fell English SC, by Igino Marini.
+  SIL Open Font License 1.1 (fonts/OFL.txt). Source: github.com/google/fonts (ofl/imfellenglish, ofl/imfellenglishsc).
+
+Woodcut engine and paper-peel transition: adapted from the Lemo-Opuscar library
+  (github.com/lemomo-ai/lemo-opuscar), code under the MIT License.
+
+Score and sound effects: synthesised for this film (mix.py), no sample libraries or recordings.
+Pictures: drawn entirely in code (film.js); no generated or stock images.

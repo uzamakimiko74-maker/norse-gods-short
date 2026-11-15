@@ -1,0 +1,15 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Top 5 Strongest Hindu Gods</title>
+<style>
+@font-face{font-family:"IM Fell English";src:url(fonts/IMFellEnglish.ttf) format("truetype")}
+@font-face{font-family:"IM Fell English SC";src:url(fonts/IMFellEnglishSC.ttf) format("truetype")}
+html,body{margin:0;background:#000;overflow:hidden}canvas{position:absolute;left:0;top:0;display:block}
+</style>
+</head><body><canvas id="cv" width="1080" height="1920"></canvas>
+<script type="module">
+const g = document.getElementById('cv').getContext('2d');
+await document.fonts.load('400 40px "IM Fell English"'); await document.fonts.load('400 40px "IM Fell English SC"');
+const F = await import('./film.js');
+F.init();
+window.DUR = F.DUR; window.EV = F.EV; window.TEXTS = F.texts; window.render = t => F.render(g, t); window.READY = true;
+</script></body></html>
