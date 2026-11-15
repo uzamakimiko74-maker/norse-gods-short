@@ -2,9 +2,13 @@
   "extraKnownMarketplaces": {
     "lemolab": {
       "source": { "source": "github", "repo": "lemomo-ai/lemo-opuscar" }
+    },
+    "ponytail": {
+      "source": { "source": "git", "url": "https://github.com/DietrichGebert/ponytail.git" }
     }
   },
   "enabledPlugins": {
-    "lemo-opuscar@lemolab": true
+    "lemo-opuscar@lemolab": true,
+    "ponytail@ponytail": true
   }
 }
