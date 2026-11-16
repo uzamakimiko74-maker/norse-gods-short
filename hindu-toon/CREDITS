@@ -1,0 +1,10 @@
+Top 5 Strongest Hindu Gods (cartoon) — credits
+
+Narration: the user's own ElevenLabs recording ("Jarnathan - warm, confident, versatile", eleven_v4).
+  Word timings: ElevenLabs Scribe transcription of the same recording.
+Characters, cast painter, sprite and world helpers: the user's own Norse gods short, extended for this film.
+Rendering pipeline and audio tools: Lemo-Opuscar library (github.com/lemomo-ai/lemo-opuscar), MIT License.
+three.js r128: MIT License (vendor/LICENSE).
+Font: Fredoka by The Fredoka Project Authors, SIL Open Font License 1.1 (fonts/OFL.txt).
+Score and sound effects: synthesised for this film (mix.py); the sitar voice is the library's
+  physically modelled 'shamisen' preset (core/audio/pluck.py). No samples or recordings.
