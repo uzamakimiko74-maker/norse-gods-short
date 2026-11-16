@@ -182,7 +182,7 @@ const SHOTS = [
   S(36.88, 'rn', [0, 1.4, 7], [0, 1.6, 6], [0, 1.5, 0], [0, 1.6, 0], { nothrone: 1, on: ['beams'], cast: [{ k: 'IN', ex: 'power', x: -1.7, z: .6, s: .75, pop: 0 }, { k: 'VN', ex: 'power', x: -.85, z: -.4, s: .75, pop: 0 }, { k: 'SV', ex: 'power', x: .85, z: -.4, s: .75, pop: 0 }, { k: 'HN', ex: 'power', x: 1.7, z: .6, s: .75, pop: 0 }] }),
   S(39.36, 'rn', [0, 1.3, 5.2], [0, 1.1, 3.8], [0, .9, .8], [0, .9, .8], { cast: [{ k: 'DG', ex: 'power', fx: 'aura', armsN: 0 }] }),
   S(40.32, 'rn', [.5, 1, 3.4], [.3, 1, 2.7], [0, 1, .8], [0, 1, .8], { burst: [1.05, 'x10!', .78, .3, '#ff8fb8'], cast: (lt, p, t) => [{ k: 'DG', ex: 'power', armsN: clamp(Math.floor((t - 40.32) / .14), 0, 8), pop: 0 }] }),
-  S(42.4, 'rn', [-2.6, 1.3, 5.8], [-1.6, 1.4, 5], [.2, 1.2, .4], [.2, 1.2, .4], { nothrone: 1, burst: [.6, 'ROAR!', .7, .3, '#ffd34d'], cast: [{ k: 'LN', ex: 'open', face: 'open', x: .2, z: .2, s: 2.4, pop: 0 }, { k: 'DG', ex: 'power', x: .5, y: .95, z: .45, s: .95, pop: 0, nosh: 1 }] }),
+  S(42.4, 'rn', [-2.6, 1.3, 5.8], [-1.6, 1.4, 5], [.2, 1.2, .4], [.2, 1.2, .4], { nothrone: 1, burst: [.6, 'ROAR!', .3, .27, '#ffd34d'], cast: [{ k: 'LN', ex: 'open', face: 'open', x: .2, z: .2, s: 2.4, pop: 0 }, { k: 'DG', ex: 'power', x: .5, y: .95, z: .45, s: .95, pop: 0, nosh: 1 }] }),
   S(43.6, 'rn', [0, 1.3, 7], [0, 1.5, 7.8], [0, 1.2, -.5], [0, 1.2, -.5], { nothrone: 1, shake: lt => lt > .35 ? .08 * Math.exp(-(lt - .35) * 4) : 0, burst: [.36, 'BOOM!', .5, .25, '#ffb26b'], cast: lt => [{ k: 'BF', ex: 'dizzy', face: 'dizzy', x: 1, z: -1.4, s: 2.6, rot: -ease((lt - .3) / .5) * 1.25, y: -ease((lt - .3) / .5) * .8, pop: 0, fx: 'stars' }, { k: 'DG', ex: 'power', x: -.9, z: .8, pop: 0 }] }),
   // #2 Vishnu
   RANK(45.2, 'yj', 'VN'),
@@ -212,17 +212,17 @@ const HEMI = { dv: [0xffe2c8, 1.0], hm: [0xc8d6ff, .85], sv: [0xffffff, 1.05], r
 const FOG = { dv: [0xffd0b0, 30, 70], hm: [0x1b2f6a, 25, 70], sv: [0xdfefff, 30, 80], rn: [0x8a3a2a, 22, 60], yj: [0xe8f4ff, 30, 80], kl: [0x202c66, 30, 80] };
 const BOLTS = [[27.52, 'sv', -.6, -3, 9, 0], [27.62, 'sv', 1.4, -4, 9, 0], [25.4, 'sv', 3, -8, 10, 0], [26.1, 'sv', -3.4, -8, 10, 0]];
 const stormAt = t => { let v = 0; for (const b of BOLTS) { const u = t - b[0]; if (u >= 0 && u < .5) v = Math.max(v, Math.exp(-u * 9)) } return v };
-const _v = new THREE.Vector3();
+const _v = new THREE.Vector3(), LOOK = new THREE.Vector3();
 
 function update(t) {
   const si = shotAt(t), s = SHOTS[si], b = SHOTS[si + 1] ? SHOTS[si + 1].a : DUR, lt = t - s.a, p = clamp(lt / (b - s.a)), k = p * p * (3 - 2 * p), w = s.w;
   for (const n in WORLDG) WORLDG[n].visible = n === w;
   for (const n in PROPS) PROPS[n].visible = !!(s.on && s.on.indexOf(n) >= 0);
   if (SEAT[w]) SEAT[w].t.visible = !s.nothrone;
-  const hm = HEMI[w]; hemi.color.set(hm[0]); hemi.intensity = hm[1];
+  const hm = HEMI[w]; hemi.color.set(hm[0]); hemi.intensity = hm[1] * .68;   // toon steps clip at full light, so the sets are lit a little lower
   const fg = FOG[w]; scene.fog = fg ? new THREE.Fog(fg[0], fg[1], fg[2]) : null;
   cam.position.set(lerp(s.p0[0], s.p1[0], k), lerp(s.p0[1], s.p1[1], k), lerp(s.p0[2], s.p1[2], k));
-  cam.lookAt(lerp(s.l0[0], s.l1[0], k), lerp(s.l0[1], s.l1[1], k), lerp(s.l0[2], s.l1[2], k));
+  LOOK.set(lerp(s.l0[0], s.l1[0], k), lerp(s.l0[1], s.l1[1], k), lerp(s.l0[2], s.l1[2], k)); cam.lookAt(LOOK);
   const sh = typeof s.shake === 'function' ? s.shake(lt) : (s.shake || 0);
   if (sh) { cam.position.x += Math.sin(t * 58) * sh; cam.position.y += Math.cos(t * 44) * sh }
   if (SEAT[w]) SEAT[w].crest.material.emissiveIntensity = .5 + .35 * Math.abs(Math.sin(t * 3));
@@ -231,7 +231,7 @@ function update(t) {
   else if (w === 'hm') { hmSnow.forEach(m => { const u = m.userData; m.position.set(u.x + Math.sin(t * .8 + u.w) * .3, 7 - ((t * u.sp + u.o) % 7.4), u.z) }); hmFl.forEach((f, i) => animFlame(f, t, i * .4, 0)); herbs.forEach((h, i) => h.material.opacity = .6 + .4 * Math.abs(Math.sin(t * 3 + i))) }
   else if (w === 'sv') {
     const dark = s.storm ? 1 : 0; svSky.material.color.setRGB(lerp(1, .42, dark) + st * .5, lerp(1, .45, dark) + st * .5, lerp(1, .62, dark) + st * .4);
-    hemi.intensity = hm[1] * (s.storm ? .7 : 1) + st * .6; rivTex.offset.y = -t * (s.drain ? 1.6 : .5); rivM.forEach(m => m.material.opacity = s.drain ? .55 : .9);
+    hemi.intensity = hm[1] * .68 * (s.storm ? .7 : 1) + st * .6; rivTex.offset.y = -t * (s.drain ? 1.6 : .5); rivM.forEach(m => m.material.opacity = s.drain ? .55 : .9);
   }
   else if (w === 'rn') { rnFl.forEach((f, i) => animFlame(f, t, i * .4, 0));
     if (s.on && s.on.includes('beams')) { const u = ease((lt - .2) / 1.6), to = new THREE.Vector3(0, 1.6, .5);
@@ -336,9 +336,45 @@ const EV = [];
   [71.92, 72.56, 73.52].forEach(t => e(t, 'pop')); e(76.88, 'fanfare');
   EV.sort((a, b) => a.t - b.t); }
 
+/* ---------- the look: cel-shaded sets with ink outlines, depth of field, glow and grade ---------- */
+const TOON = new THREE.DataTexture(new Uint8Array([88, 150, 205]), 3, 1, THREE.LuminanceFormat);
+TOON.minFilter = TOON.magFilter = THREE.NearestFilter; TOON.needsUpdate = true;
+const INKM = new THREE.MeshBasicMaterial({ color: 0x1d1830, side: THREE.BackSide });
+{ const conv = new Map(), poolSp = new Set(POOL.map(p => p.sp));
+  const big = m => { m.geometry.computeBoundingSphere(); return m.geometry.boundingSphere.radius };
+  scene.traverse(o => {
+    if (!o.isMesh || o.userData.ink) return;
+    const m = o.material; if (!(m.isMeshLambertMaterial || m.isMeshPhongMaterial)) return;
+    if (!conv.has(m)) conv.set(m, new THREE.MeshToonMaterial({ color: m.color, map: m.map, gradientMap: TOON, emissive: m.emissive || new THREE.Color(0), emissiveIntensity: m.emissiveIntensity ?? 1, transparent: m.transparent, opacity: m.opacity, side: m.side }));
+    o.material = conv.get(m);
+    const r = big(o); if (r > 6 || m.transparent || m.side === THREE.DoubleSide || o.geometry.type === 'PlaneGeometry' || o.geometry.type === 'CircleGeometry') return;
+    const ink = new THREE.Mesh(o.geometry, INKM); ink.userData.ink = 1; ink.scale.setScalar(1 + .045 / Math.max(r, .05) * Math.min(1, r * 2 + .3)); o.add(ink);
+  }) }
+const WORLDS = Object.values(WORLDG);
+sunL.intensity = .55; rimL.intensity = .3;
+const bloomC = document.createElement('canvas'); bloomC.width = W / 4; bloomC.height = H / 4; const bloomX = bloomC.getContext('2d');
+function composite(g, t) {
+  // depth of field: on close and medium shots the set renders blurred, then the cast renders sharp on top
+  const d = cam.position.distanceTo(LOOK), blur = clamp((5.6 - d) * 1.3, 0, 5);
+  g.save(); g.filter = 'saturate(1.12) contrast(1.06)' + (blur > .3 ? ` blur(${blur.toFixed(2)}px)` : '');
+  if (blur > .3) POOL.forEach(p => { p.vis = p.sp.visible; p.sp.visible = false });
+  renderer.render(scene, cam); g.drawImage(glc, 0, 0, W, H);
+  if (blur > .3) {
+    const vis = WORLDS.map(w => w.visible), bolts = boltSp.map(b => b.visible);
+    WORLDS.forEach(w => w.visible = false); boltSp.forEach(b => b.visible = false); POOL.forEach(p => p.sp.visible = p.vis);
+    renderer.setClearColor(0x000000, 0); renderer.render(scene, cam);
+    WORLDS.forEach((w, i) => w.visible = vis[i]); boltSp.forEach((b, i) => b.visible = bolts[i]);
+    g.filter = 'saturate(1.12) contrast(1.06)'; g.drawImage(glc, 0, 0, W, H);
+  }
+  g.restore();
+  // glow: the brightest parts, blurred at quarter size and screened back over the frame
+  bloomX.filter = 'brightness(.55) contrast(4) blur(6px)'; bloomX.clearRect(0, 0, W / 4, H / 4); bloomX.drawImage(g.canvas, 0, 0, W / 4, H / 4);
+  g.save(); g.globalCompositeOperation = 'screen'; g.globalAlpha = .24; g.drawImage(bloomC, 0, 0, W, H); g.restore();
+}
+
 /* ---------- Lemo-Opuscar page contract ---------- */
 const cv = document.getElementById('cv'), ctx2 = cv.getContext('2d');
 window.DUR = DUR; window.EV = EV;
-window.render = t => { update(t); renderer.render(scene, cam); ctx2.drawImage(glc, 0, 0); drawHUD(ctx2, t) };
+window.render = t => { update(t); composite(ctx2, t); drawHUD(ctx2, t) };
 window.TEXTS = t => { const i = capIdx(t); return i < 0 ? [] : [{ id: 'w' + i, text: WORDS[i].w, x0: 60, x1: W - 60, y0: H * .74, y1: H * .84, pass: true }] };
 document.fonts.load('700 40px Fredoka').then(() => { LABELS.forEach(r => r()); window.READY = true });

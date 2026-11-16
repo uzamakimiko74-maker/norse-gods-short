@@ -164,7 +164,7 @@ function drawChar(g,c,t){
 }
 const POOL=[];
 for(let i=0;i<14;i++){const c=document.createElement('canvas');c.width=256*SPR;c.height=352*SPR;const g=c.getContext('2d');
-  const tex=new THREE.CanvasTexture(c);tex.encoding=THREE.sRGBEncoding;tex.minFilter=THREE.LinearFilter;tex.generateMipmaps=false;
+  const tex=new THREE.CanvasTexture(c);tex.encoding=THREE.sRGBEncoding;tex.minFilter=THREE.LinearMipmapLinearFilter;tex.generateMipmaps=true;tex.anisotropy=4;
   const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,alphaTest:.04}));sp.visible=false;scene.add(sp);POOL.push({sp,g,tex,key:''})}
 function setCast(list,t,lt){
   POOL.forEach((p,i)=>{const c=list[i];if(!c||lt<(c.at||0)){p.sp.visible=false;return}
