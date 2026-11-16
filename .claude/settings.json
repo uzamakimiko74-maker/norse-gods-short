@@ -39,7 +39,8 @@
     "lemo-opuscar@lemolab": true,
     "ponytail@ponytail": true,
     "document-skills@anthropic-agent-skills": true,
-    "example-skills@anthropic-agent-skills": true
+    "example-skills@anthropic-agent-skills": true,
+    "watch@claude-video": true
   },
   "extraKnownMarketplaces": {
     "lemolab": {
@@ -58,6 +59,12 @@
       "source": {
         "source": "github",
         "repo": "anthropics/skills"
+      }
+    },
+    "claude-video": {
+      "source": {
+        "source": "github",
+        "repo": "bradautomates/claude-video"
       }
     }
   }
