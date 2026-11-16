@@ -1,22 +1,4 @@
 {
-  "extraKnownMarketplaces": {
-    "lemolab": {
-      "source": {
-        "source": "github",
-        "repo": "lemomo-ai/lemo-opuscar"
-      }
-    },
-    "ponytail": {
-      "source": {
-        "source": "git",
-        "url": "https://github.com/DietrichGebert/ponytail.git"
-      }
-    }
-  },
-  "enabledPlugins": {
-    "lemo-opuscar@lemolab": true,
-    "ponytail@ponytail": true
-  },
   "hooks": {
     "PreToolUse": [
       {
@@ -52,5 +34,31 @@
         ]
       }
     ]
+  },
+  "enabledPlugins": {
+    "lemo-opuscar@lemolab": true,
+    "ponytail@ponytail": true,
+    "document-skills@anthropic-agent-skills": true,
+    "example-skills@anthropic-agent-skills": true
+  },
+  "extraKnownMarketplaces": {
+    "lemolab": {
+      "source": {
+        "source": "github",
+        "repo": "lemomo-ai/lemo-opuscar"
+      }
+    },
+    "ponytail": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/DietrichGebert/ponytail.git"
+      }
+    },
+    "anthropic-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/skills"
+      }
+    }
   }
 }
