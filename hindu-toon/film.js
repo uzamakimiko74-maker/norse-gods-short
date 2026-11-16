@@ -372,9 +372,30 @@ function composite(g, t) {
   g.save(); g.globalCompositeOperation = 'screen'; g.globalAlpha = .24; g.drawImage(bloomC, 0, 0, W, H); g.restore();
 }
 
+/* ---------- thumbnail (?thumb): the cast in Shiva's ring of fire, with the title ---------- */
+function renderThumb(g) {
+  const t = 3.2;
+  for (const n in WORLDG) WORLDG[n].visible = n === 'nt'; for (const n in PROPS) PROPS[n].visible = false;
+  hemi.color.set(HEMI.nt[0]); hemi.intensity = HEMI.nt[1] * .68; scene.fog = null;
+  ring.rotation.z = t * .2; ringFl.forEach((f, i) => animFlame(f, t, i * .13, 0));
+  cam.position.set(0, 1.35, 8.2); LOOK.set(0, 1.05, .4); cam.lookAt(LOOK);
+  setCast([{ k: 'SV', ex: 'power', face: 'power', fx: 'spark', s: 1.9, y: .1, z: .4, pop: 0 },
+    { k: 'DG', ex: 'power', x: -1.75, y: .05, z: .7, s: 1.2, pop: 0 }, { k: 'VN', ex: 'power', x: 1.75, y: .05, z: .7, s: 1.2, pop: 0 },
+    { k: 'HN', ex: 'power', face: 'happy', x: -.8, z: 3.7, s: .9, pop: 0 }, { k: 'IN', ex: 'power', face: 'happy', x: .8, z: 3.7, s: .9, pop: 0 }], t, 9);
+  boltSp.forEach(b => b.visible = false);
+  composite(g, t);
+  const vg = g.createRadialGradient(W / 2, H * .45, H * .3, W / 2, H * .45, H * .75); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(8,4,20,.55)'); g.fillStyle = vg; g.fillRect(0, 0, W, H);
+  txt(g, 'TOP 5', W / 2, H * .095, W * .25, '#ffd34d', { rot: -.04, sw: .16 });
+  txt(g, 'STRONGEST', W / 2, H * .19, W * .15, '#fff', { sw: .17 });
+  txt(g, 'HINDU GODS', W / 2, H * .265, W * .15, '#fff', { sw: .17 });
+  g.save(); g.translate(W * .5, H * .86); g.rotate(-.05); const fs = W * .13; g.font = '700 ' + Math.round(fs) + 'px ' + FONT; const bw = g.measureText('WHO IS #1?').width + fs * .9;
+  rrect(g, -bw / 2, -fs * .78, bw, fs * 1.56, fs * .3); g.fillStyle = '#e62117'; g.fill(); g.lineWidth = fs * .1; g.strokeStyle = '#14102a'; g.stroke(); g.restore();
+  txt(g, 'WHO IS #1?', W / 2, H * .862, W * .13, '#fff', { rot: -.05, sw: .14 });
+}
+
 /* ---------- Lemo-Opuscar page contract ---------- */
 const cv = document.getElementById('cv'), ctx2 = cv.getContext('2d');
 window.DUR = DUR; window.EV = EV;
-window.render = t => { update(t); composite(ctx2, t); drawHUD(ctx2, t) };
+window.render = new URLSearchParams(location.search).has('thumb') ? () => renderThumb(ctx2) : t => { update(t); composite(ctx2, t); drawHUD(ctx2, t) };
 window.TEXTS = t => { const i = capIdx(t); return i < 0 ? [] : [{ id: 'w' + i, text: WORDS[i].w, x0: 60, x1: W - 60, y0: H * .74, y1: H * .84, pass: true }] };
 document.fonts.load('700 40px Fredoka').then(() => { LABELS.forEach(r => r()); window.READY = true });
